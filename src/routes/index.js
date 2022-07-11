@@ -26,5 +26,6 @@ router.patch("/category/:id", updateCategory)
 router.delete("/category/:id", deleteCategory)
 
 router.post("/transaction", addTransaction)
+router.get("/transactions", getTransactions)
 
 module.exports = router;
