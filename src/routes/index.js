@@ -6,6 +6,7 @@ const router = express.Router();
 const { addUsers, getUser} = require("../controllers/user");
 const { addProduct, getProducts, getProduct, updateProduct, deleteProduct } = require("../controllers/product");
 const { addCategory, getCategories, getCategory, updateCategory, deleteCategory } = require("../controllers/category");
+const { addTransaction, getTransactions } = require("../controllers/transaction");
 
 //. Router
 
@@ -24,5 +25,6 @@ router.get("/category/:id", getCategory)
 router.patch("/category/:id", updateCategory)
 router.delete("/category/:id", deleteCategory)
 
+router.post("/transaction", addTransaction)
 
 module.exports = router;

@@ -1,4 +1,4 @@
-const { user } = require("../../models");
+const { user, profile } = require("../../models");
 
 exports.addUsers = async (req, res) => {
     try {
@@ -22,19 +22,11 @@ exports.getUser = async (req, res) => {
 
         const {email, password} = req.body
 
-        const dataUser = await user.findOne({
-            where: {
-                email,
-                password,
-            },
-            attributes: {
-                exclude: ["createdAt","updatedAt"]
-            }
-        });
+        const user = await user.findAll(req.body);
 
         res.send({
             status: "success",
-            data: {user: dataUser},
+            data: {user: req.body},
         });
     } catch (error) {
         console.log(error);
