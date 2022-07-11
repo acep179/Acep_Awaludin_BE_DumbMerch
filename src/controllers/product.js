@@ -37,3 +37,54 @@ exports.addProduct = async (req, res) => {
         });
     }
 };
+
+
+exports.getProducts = async (req, res) => {
+    try {
+
+        const dataProduct = await product.findAll({
+            attributes: {
+                exclude: ["createdAt","updatedAt","idUser"]
+            }
+        });
+
+        res.send({
+            status: "success",
+            data: {products: dataProduct},
+        });
+    } catch (error) {
+        console.log(error);
+        res.send({
+            status: "failed",
+            message: "Server Error",
+        });
+    }
+};
+
+exports.getProduct = async (req, res) => {
+    try {
+
+        const {id} = req.params
+
+        const dataProduct = await product.findOne({
+            where: {
+                id
+            },
+            attributes: {
+                exclude: ["createdAt","updatedAt","idUser"]
+            }
+        });
+
+        res.send({
+            status: "success",
+            data: {product: dataProduct},
+        });
+    } catch (error) {
+        console.log(error);
+        res.send({
+            status: "failed",
+            message: "Server Error",
+        });
+    }
+};
+
