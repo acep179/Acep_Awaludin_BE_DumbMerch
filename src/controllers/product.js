@@ -88,3 +88,26 @@ exports.getProduct = async (req, res) => {
     }
 };
 
+exports.updateProduct = async (req, res) => {
+    try {
+
+        const {id} = req.params
+
+        await product.update(req.body,{
+            where: {
+                id
+            }
+        });
+
+        res.send({
+            status: "success",
+            data: {product: req.body},
+        });
+    } catch (error) {
+        console.log(error);
+        res.send({
+            status: "failed",
+            message: "Server Error",
+        });
+    }
+};
