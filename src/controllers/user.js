@@ -1,4 +1,4 @@
-const { user, profile } = require("../../models");
+const { user } = require("../../models");
 
 exports.addUsers = async (req, res) => {
     try {
