@@ -4,7 +4,7 @@ const router = express.Router();
 
 //. Controller
 const { addUsers, getUser} = require("../controllers/user");
-const { addProduct, getProducts, getProduct, updateProduct } = require("../controllers/product");
+const { addProduct, getProducts, getProduct, updateProduct, deleteProduct } = require("../controllers/product");
 
 //. Router
 
@@ -14,6 +14,7 @@ router.post("/product", addProduct)
 router.get("/products", getProducts)
 router.get("/product/:id", getProduct)
 router.patch("/product/:id", updateProduct)
+router.delete("/product/:id", deleteProduct)
 
 
 module.exports = router;

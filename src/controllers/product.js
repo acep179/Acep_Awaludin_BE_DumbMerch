@@ -111,3 +111,27 @@ exports.updateProduct = async (req, res) => {
         });
     }
 };
+
+exports.deleteProduct = async (req, res) => {
+    try {
+
+        const {id} = req.params
+
+        await product.destroy({
+            where: {
+                id
+            }
+        });
+
+        res.send({
+            status: "success",
+            data: {id},
+        });
+    } catch (error) {
+        console.log(error);
+        res.send({
+            status: "failed",
+            message: "Server Error",
+        });
+    }
+};
