@@ -22,7 +22,12 @@ exports.getUser = async (req, res) => {
 
         const {email, password} = req.body
 
-        const user = await user.findAll(req.body);
+        const user = await user.findAll({
+            where: {
+                email,
+                password
+            }
+        });
 
         res.send({
             status: "success",
