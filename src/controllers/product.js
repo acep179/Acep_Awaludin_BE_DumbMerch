@@ -1,12 +1,33 @@
-const { user } = require("../../models");
+const { user, product } = require("../../models");
 
-exports.addUser = async (req, res) => {
+exports.addProduct = async (req, res) => {
     try {
-        await user.create(req.body);
+
+        const {name, desc, price, image, qty} = req.body
+
+        await product.create(req.body);
+
+        const dataUser = await user.findAll({
+            where:{
+                id:req.body.idUser,
+            },
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "password"],
+            },
+        })
+
+        const data = {
+            name,
+            desc,
+            price,
+            image,
+            qty,
+            dataUser
+        }
 
         res.send({
             status: "success",
-            data: {user: req.body},
+            data: {product: data},
         });
     } catch (error) {
         console.log(error);
@@ -17,10 +38,11 @@ exports.addUser = async (req, res) => {
     }
 };
 
-exports.getUsers = async (req, res) => {
+
+exports.getProducts = async (req, res) => {
     try {
 
-        const data = await user.findAll({
+        const dataProduct = await product.findAll({
             attributes: {
                 exclude: ["createdAt","updatedAt","idUser"]
             }
@@ -28,7 +50,7 @@ exports.getUsers = async (req, res) => {
 
         res.send({
             status: "success",
-            data
+            data: {products: dataProduct},
         });
     } catch (error) {
         console.log(error);
@@ -39,51 +61,24 @@ exports.getUsers = async (req, res) => {
     }
 };
 
-exports.getUser = async (req,res) => {
-    
+exports.getProduct = async (req, res) => {
     try {
-        
+
         const {id} = req.params
-        
-        const data = await user.findOne({
+
+        const dataProduct = await product.findOne({
             where: {
                 id
             },
             attributes: {
-                exclude: ["createdAt","updatedAt"]
-            }
-        });
-        
-        res.send({
-            status: "success",
-            data
-        });
-
-        } catch (error) {
-        console.log(error);
-        res.send({
-            status: "failed",
-            message: "Server Error",
-        });
-        }
-    }
-    
-exports.updateUser = async (req, res) => {
-    try {
-
-        const {id} = req.params
-
-        await user.update(req.body,{
-            where: {
-                id
+                exclude: ["createdAt","updatedAt","idUser"]
             }
         });
 
         res.send({
             status: "success",
-            data: {user: req.body},
+            data: {product: dataProduct},
         });
-
     } catch (error) {
         console.log(error);
         res.send({
@@ -93,12 +88,12 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.updateProduct = async (req, res) => {
     try {
 
         const {id} = req.params
 
-        await user.destroy({
+        await product.update(req.body,{
             where: {
                 id
             }
@@ -106,7 +101,31 @@ exports.deleteUser = async (req, res) => {
 
         res.send({
             status: "success",
-            message: `User with id ${id} has been deleted`,
+            data: {product: req.body},
+        });
+    } catch (error) {
+        console.log(error);
+        res.send({
+            status: "failed",
+            message: "Server Error",
+        });
+    }
+};
+
+exports.deleteProduct = async (req, res) => {
+    try {
+
+        const {id} = req.params
+
+        await product.destroy({
+            where: {
+                id
+            }
+        });
+
+        res.send({
+            status: "success",
+            data: {id},
         });
     } catch (error) {
         console.log(error);
