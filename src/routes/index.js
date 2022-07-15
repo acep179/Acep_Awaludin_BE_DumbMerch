@@ -12,6 +12,7 @@ const { register, login } = require("../controllers/auth");
 
 //. Middleware
 const { auth } = require('../middlewares/auth')
+const { uploadImage } = require('../middlewares/uploadImage')
 
 
 //. Router
@@ -22,7 +23,7 @@ router.get('/user/:id', getUser)
 router.patch('/user/:id', updateUser)
 router.delete('/user/:id', deleteUser)
 
-router.post("/product", auth, addProduct)
+router.post("/product", auth, uploadImage('image'), addProduct)
 router.get("/products", getProducts)
 router.get("/product/:id", getProduct)
 router.patch("/product/:id", updateProduct)

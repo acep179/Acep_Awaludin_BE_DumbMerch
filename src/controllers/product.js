@@ -1,37 +1,33 @@
-const { user, product, category } = require("../../models");
-
+const { user, product, category, category_product } = require("../../models");
+``
 exports.addProduct = async (req, res) => {
     try {
 
-        const {name, desc, price, image, qty} = req.body
+        const data = req.body
 
-        await product.create(req.body);
-
-        const dataUser = await user.findAll({
-            where:{
-                id:req.body.idUser,
-            },
-            attributes: {
-                exclude: ["createdAt", "updatedAt", "password"],
-            },
+        let newProduct = await product.create({
+            ...data,
+            image: req.file.filename,
+            idUser: req.user.id 
         })
-
-        const data = {
-            name,
-            desc,
-            price,
-            image,
-            qty,
-            dataUser
+    
+        newProduct = JSON.parse(JSON.stringify(newProduct))
+    
+        newProduct = {
+            ...newProduct,
+            image: process.env.PATH_FILE + newProduct.image
         }
-
+    
         res.send({
             status: "success",
-            data: {product: data},
-        });
+            data: {newProduct}
+        })
+    
+    
+    
     } catch (error) {
         console.log(error);
-        res.send({
+        res.status(500).send({
             status: "failed",
             message: "Server Error",
         });
@@ -55,7 +51,7 @@ exports.getProducts = async (req, res) => {
                     model: category,
                     as: "categories",
                     through: {
-                        model: productCategory,
+                        model: category_product,
                         as: "bridge",
                         attributes: [],
                     },
