@@ -1,6 +1,6 @@
 const { user } = require("../../models");
 
-exports.addUsers = async (req, res) => {
+exports.addUser = async (req, res) => {
     try {
         await user.create(req.body);
 
@@ -17,24 +17,18 @@ exports.addUsers = async (req, res) => {
     }
 };
 
-exports.getUser = async (req, res) => {
+exports.getUsers = async (req, res) => {
     try {
 
-        const {email, password} = req.body
-
-        const dataUser = await user.findOne({
-            where: {
-                email,
-                password,
-            },
+        const data = await user.findAll({
             attributes: {
-                exclude: ["createdAt","updatedAt"]
+                exclude: ["createdAt","updatedAt","idUser"]
             }
         });
 
         res.send({
             status: "success",
-            data: {user: dataUser},
+            data
         });
     } catch (error) {
         console.log(error);
@@ -45,3 +39,80 @@ exports.getUser = async (req, res) => {
     }
 };
 
+exports.getUser = async (req,res) => {
+    
+    try {
+        
+        const {id} = req.params
+        
+        const data = await user.findOne({
+            where: {
+                id
+            },
+            attributes: {
+                exclude: ["createdAt","updatedAt"]
+            }
+        });
+        
+        res.send({
+            status: "success",
+            data
+        });
+
+        } catch (error) {
+        console.log(error);
+        res.send({
+            status: "failed",
+            message: "Server Error",
+        });
+        }
+    }
+    
+exports.updateUser = async (req, res) => {
+    try {
+
+        const {id} = req.params
+
+        await user.update(req.body,{
+            where: {
+                id
+            }
+        });
+
+        res.send({
+            status: "success",
+            data: {user: req.body},
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.send({
+            status: "failed",
+            message: "Server Error",
+        });
+    }
+};
+
+exports.deleteUser = async (req, res) => {
+    try {
+
+        const {id} = req.params
+
+        await user.destroy({
+            where: {
+                id
+            }
+        });
+
+        res.send({
+            status: "success",
+            message: `User with id ${id} has been deleted`,
+        });
+    } catch (error) {
+        console.log(error);
+        res.send({
+            status: "failed",
+            message: "Server Error",
+        });
+    }
+};
