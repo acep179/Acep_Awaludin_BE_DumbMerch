@@ -1,12 +1,13 @@
-const { user } = require("../../models");
+const { category } = require("../../models");
 
-exports.addUser = async (req, res) => {
+exports.addCategory = async (req, res) => {
     try {
-        await user.create(req.body);
+
+        await category.create(req.body);
 
         res.send({
             status: "success",
-            data: {user: req.body},
+            data: {category: req.body},
         });
     } catch (error) {
         console.log(error);
@@ -17,18 +18,19 @@ exports.addUser = async (req, res) => {
     }
 };
 
-exports.getUsers = async (req, res) => {
+
+exports.getCategories = async (req, res) => {
     try {
 
-        const data = await user.findAll({
+        const dataCategory = await category.findAll({
             attributes: {
-                exclude: ["createdAt","updatedAt","idUser"]
+                exclude: ["createdAt","updatedAt"]
             }
         });
 
         res.send({
             status: "success",
-            data
+            data: {categories: dataCategory},
         });
     } catch (error) {
         console.log(error);
@@ -39,13 +41,12 @@ exports.getUsers = async (req, res) => {
     }
 };
 
-exports.getUser = async (req,res) => {
-    
+exports.getCategory = async (req, res) => {
     try {
-        
+
         const {id} = req.params
-        
-        const data = await user.findOne({
+
+        const dataCategory = await category.findOne({
             where: {
                 id
             },
@@ -53,37 +54,11 @@ exports.getUser = async (req,res) => {
                 exclude: ["createdAt","updatedAt"]
             }
         });
-        
-        res.send({
-            status: "success",
-            data
-        });
-
-        } catch (error) {
-        console.log(error);
-        res.send({
-            status: "failed",
-            message: "Server Error",
-        });
-        }
-    }
-    
-exports.updateUser = async (req, res) => {
-    try {
-
-        const {id} = req.params
-
-        await user.update(req.body,{
-            where: {
-                id
-            }
-        });
 
         res.send({
             status: "success",
-            data: {user: req.body},
+            data: {category: dataCategory},
         });
-
     } catch (error) {
         console.log(error);
         res.send({
@@ -93,12 +68,12 @@ exports.updateUser = async (req, res) => {
     }
 };
 
-exports.deleteUser = async (req, res) => {
+exports.updateCategory = async (req, res) => {
     try {
 
         const {id} = req.params
 
-        await user.destroy({
+        await category.update(req.body,{
             where: {
                 id
             }
@@ -106,7 +81,31 @@ exports.deleteUser = async (req, res) => {
 
         res.send({
             status: "success",
-            message: `User with id ${id} has been deleted`,
+            data: {category: req.body},
+        });
+    } catch (error) {
+        console.log(error);
+        res.send({
+            status: "failed",
+            message: "Server Error",
+        });
+    }
+};
+
+exports.deleteCategory = async (req, res) => {
+    try {
+
+        const {id} = req.params
+
+        await category.destroy({
+            where: {
+                id
+            }
+        });
+
+        res.send({
+            status: "success",
+            data: {id},
         });
     } catch (error) {
         console.log(error);
