@@ -1,4 +1,4 @@
-const { user, product } = require("../../models");
+const { user, product, category } = require("../../models");
 
 exports.addProduct = async (req, res) => {
     try {
@@ -43,9 +43,30 @@ exports.getProducts = async (req, res) => {
     try {
 
         const dataProduct = await product.findAll({
+            include: [
+                {
+                    model: user,
+                    as: "user",
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt", "password"],
+                    },
+                },
+                {
+                    model: category,
+                    as: "categories",
+                    through: {
+                        model: productCategory,
+                        as: "bridge",
+                        attributes: [],
+                    },
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt"],
+                    },
+                },
+            ],
             attributes: {
                 exclude: ["createdAt","updatedAt","idUser"]
-            }
+            },
         });
 
         res.send({
@@ -70,6 +91,27 @@ exports.getProduct = async (req, res) => {
             where: {
                 id
             },
+            include: [
+                {
+                    model: user,
+                    as: "user",
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt", "password"],
+                    },
+                },
+                {
+                    model: category,
+                    as: "categories",
+                    through: {
+                        model: productCategory,
+                        as: "bridge",
+                        attributes: [],
+                    },
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt"],
+                    },
+                },
+            ],
             attributes: {
                 exclude: ["createdAt","updatedAt","idUser"]
             }
