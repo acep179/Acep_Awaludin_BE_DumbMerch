@@ -19,7 +19,6 @@ router.get('/user/:id', getUser)
 router.patch('/user/:id', updateUser)
 router.delete('/user/:id', deleteUser)
 
-
 router.post("/product", addProduct)
 router.get("/products", getProducts)
 router.get("/product/:id", getProduct)
