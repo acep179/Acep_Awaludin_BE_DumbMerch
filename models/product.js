@@ -31,14 +31,13 @@ module.exports = (sequelize, DataTypes) => {
       product.belongsToMany(models.category, {
         as: "categories",
         through: {
-          model: "productCategory",
+          model: "category_product",
           as: "bridge",
         },
         foreignKey: "idProduct",
       });
     }
   }
-}
   product.init({
     name: DataTypes.STRING,
     desc: DataTypes.STRING,
