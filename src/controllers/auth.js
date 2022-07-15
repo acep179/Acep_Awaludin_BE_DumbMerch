@@ -1,5 +1,7 @@
-const {user} = require("../../models")
+const {user, profile} = require("../../models")
 const Joi = require("joi")
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res) => {
 
@@ -38,20 +40,31 @@ exports.register = async (req, res) => {
             })
         }
 
+        //. Mengenkripsi Password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
         //. Membuat Data User Berdasarkan Inputan
         const newUser = await user.create({
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password,
+            password: hashedPassword,
             status: "custommer"
         })
+
+        //. Membuat Data Profile untuk User
+        await profile.create({idUser: newUser.id})
+
+        //. Membuat Token
+        const token = jwt.sign({ id: user.id }, process.env.TOKEN_KEY);
 
         res.status(201).send({
             status: "success",
             message: "register success",
             data: {
                 name: newUser.name,
-                email: newUser.email
+                email: newUser.email,
+                token
             }
         })
 
@@ -89,31 +102,41 @@ exports.login = async (req, res) => {
         const userExist = await user.findOne({
             where: { 
                 email: req.body.email
-            }
+            },
+            attributes: {
+                exclude: ["createdAt", "updatedAt"],
+            },
         })
-
-        console.log(userExist);
-
+        
         if(!userExist){
             return res.status(400).send({
                 status: "failed",
                 message: "Email belum terdaftar"
             })
         }
+        
 
-        //. Pengecekan apakah password benar atau salah
-        if(userExist.password !== req.body.password){
+        //. Pengecekan Password
+        const isValid = await bcrypt.compare(req.body.password, userExist.password);
+
+        if (!isValid) {
             return res.status(400).send({
                 status: "failed",
-                message: "Password salah"
-            })
+                message: "credential is invalid",
+            });
         }
+
+        //. Pembuatan Token
+        const token = jwt.sign({ id: userExist.id }, process.env.TOKEN_KEY);
+
+        console.log(token)
 
         res.status(200).send({
             status: "success",
             data: {
                 name: userExist.name,
-                email: userExist.email
+                email: userExist.email,
+                // token
             }
         })
 
