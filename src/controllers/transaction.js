@@ -8,6 +8,7 @@ exports.addTransaction = async (req, res) => {
             status: "success",
             data: {transaction: req.body},
         });
+        
     } catch (error) {
         console.log(error);
         res.send({

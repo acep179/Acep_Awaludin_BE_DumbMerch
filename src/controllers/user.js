@@ -21,6 +21,13 @@ exports.getUsers = async (req, res) => {
     try {
 
         const data = await user.findAll({
+            include: {
+                model: profile,
+                as: "profile",
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "idUser"],
+                },
+            },
             attributes: {
                 exclude: ["createdAt","updatedAt","idUser"]
             }
@@ -48,6 +55,13 @@ exports.getUser = async (req,res) => {
         const data = await user.findOne({
             where: {
                 id
+            },
+            include: {
+                model: profile,
+                as: "profile",
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "idUser"],
+                },
             },
             attributes: {
                 exclude: ["createdAt","updatedAt"]
@@ -81,6 +95,7 @@ exports.updateUser = async (req, res) => {
 
         res.send({
             status: "success",
+            message: `Update user id: ${id} finished`,
             data: {user: req.body},
         });
 
