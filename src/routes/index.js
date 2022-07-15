@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 //. Controller
+
 const { addUser, getUsers, getUser, updateUser, deleteUser } = require("../controllers/user");
 const { addProduct, getProducts, getProduct, updateProduct, deleteProduct } = require("../controllers/product");
 const { addCategory, getCategories, getCategory, updateCategory, deleteCategory } = require("../controllers/category");

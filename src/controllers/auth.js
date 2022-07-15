@@ -62,7 +62,6 @@ exports.register = async (req, res) => {
             message: "server error"
         })
     }
-
 };
 
 
