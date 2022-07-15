@@ -10,6 +10,9 @@ const { addCategory, getCategories, getCategory, updateCategory, deleteCategory 
 const { addTransaction, getTransactions } = require("../controllers/transaction");
 const { register, login } = require("../controllers/auth");
 
+//. Middleware
+const { auth } = require('../middlewares/auth')
+
 
 //. Router
 
@@ -19,7 +22,7 @@ router.get('/user/:id', getUser)
 router.patch('/user/:id', updateUser)
 router.delete('/user/:id', deleteUser)
 
-router.post("/product", addProduct)
+router.post("/product", auth, addProduct)
 router.get("/products", getProducts)
 router.get("/product/:id", getProduct)
 router.patch("/product/:id", updateProduct)
@@ -31,7 +34,7 @@ router.get("/category/:id", getCategory)
 router.patch("/category/:id", updateCategory)
 router.delete("/category/:id", deleteCategory)
 
-router.post("/transaction", addTransaction)
+router.post("/transaction", auth, addTransaction)
 router.get("/transactions", getTransactions)
 
 router.post("/register", register)
