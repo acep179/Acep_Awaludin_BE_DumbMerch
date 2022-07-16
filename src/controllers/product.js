@@ -2,25 +2,74 @@ const { user, product, category, category_product } = require("../../models");
 ``
 exports.addProduct = async (req, res) => {
     try {
-
-        const data = req.body
-
+        
+        const { category: categoryName, ...data } = req.body;
+        
         let newProduct = await product.create({
             ...data,
             image: req.file.filename,
             idUser: req.user.id 
         })
-    
+        
         newProduct = JSON.parse(JSON.stringify(newProduct))
-    
+        
         newProduct = {
             ...newProduct,
             image: process.env.PATH_FILE + newProduct.image
         }
+
+        // code here
+        const categoryData = await category.findOne({
+            where: {
+                name: categoryName,
+            },
+        });
+
+        if (categoryData) {
+            await category_product.create({
+                idCategory: categoryData.id,
+                idProduct: newProduct.id
+            });
+        } else {
+            const newCategory = await category.create({ name: categoryName });
+            await category_product.create({
+                idCategory: newCategory.id,
+                idProduct: newProduct.id
+            });
+        }
+        
+        let productData = await product.findOne({
+            where: {
+                id: newProduct.id,
+            },
+            include: [
+                {
+                    model: user,
+                    as: "user",
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt", "password"],
+                    },
+                },
+                {
+                    model: category,
+                    as: "categories",
+                    through: {
+                        model: category_product,
+                        as: "bridge",
+                    },
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt"],
+                    },
+                },
+            ],
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "idUser"],
+            },
+        });
     
         res.send({
             status: "success",
-            data: {newProduct}
+            data: {productData}
         })
     
     
