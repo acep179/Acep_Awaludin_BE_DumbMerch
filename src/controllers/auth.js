@@ -1,4 +1,4 @@
-const {user, profile} = require("../../models")
+const { user, profile } = require("../../models")
 const Joi = require("joi")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -6,34 +6,34 @@ const jwt = require("jsonwebtoken");
 exports.register = async (req, res) => {
 
     try {
-        
+
         //. Melakukan validasi menggunakan Joi 
         const schema = Joi.object({
             name: Joi.string().min(3).required(),
             email: Joi.string().email().min(5).required(),
             password: Joi.string().min(4).required()
         })
-    
-        const {error} = schema.validate(req.body)
-    
-        if(error){
+
+        const { error } = schema.validate(req.body)
+
+        if (error) {
             return res.status(400).send({
                 error: {
-                message: error.details[0].message
+                    message: error.details[0].message
                 }
             })
         }
 
         //. Mengecek apakah sudah ada user dengan email yang diinputkan
         const userExist = await user.findOne({
-            where: { 
+            where: {
                 email: req.body.email
             }
         })
 
         console.log(userExist);
 
-        if(userExist){
+        if (userExist) {
             return res.status(400).send({
                 status: "failed",
                 message: "Email sudah terdaftar"
@@ -53,7 +53,7 @@ exports.register = async (req, res) => {
         })
 
         //. Membuat Data Profile untuk User
-        await profile.create({idUser: newUser.id})
+        await profile.create({ idUser: newUser.id })
 
         //. Membuat Token
         const token = jwt.sign({ id: user.id }, process.env.TOKEN_KEY);
@@ -87,10 +87,10 @@ exports.login = async (req, res) => {
             email: Joi.string().email().min(10).required(),
             password: Joi.string().min(4).required()
         })
-    
-        const {error} = schema.validate(req.body)
-        
-        if(error){
+
+        const { error } = schema.validate(req.body)
+
+        if (error) {
             return res.status(400).send({
                 error: {
                     message: error.details[0].message
@@ -100,21 +100,21 @@ exports.login = async (req, res) => {
 
         //. Pengecekan apakah ada user berdasarkan email yang diinputkan
         const userExist = await user.findOne({
-            where: { 
+            where: {
                 email: req.body.email
             },
             attributes: {
                 exclude: ["createdAt", "updatedAt"],
             },
         })
-        
-        if(!userExist){
+
+        if (!userExist) {
             return res.status(400).send({
                 status: "failed",
                 message: "Email belum terdaftar"
             })
         }
-        
+
 
         //. Pengecekan Password
         const isValid = await bcrypt.compare(req.body.password, userExist.password);
@@ -148,4 +148,43 @@ exports.login = async (req, res) => {
         })
     }
 
+};
+
+exports.checkAuth = async (req, res) => {
+    try {
+        const id = req.user.id;
+
+        const dataUser = await user.findOne({
+            where: {
+                id,
+            },
+            attributes: {
+                exclude: ["createdAt", "updatedAt", "password"],
+            },
+        });
+
+        if (!dataUser) {
+            return res.status(404).send({
+                status: "failed",
+            });
+        }
+
+        res.send({
+            status: "success...",
+            data: {
+                user: {
+                    id: dataUser.id,
+                    name: dataUser.name,
+                    email: dataUser.email,
+                    status: dataUser.status,
+                },
+            },
+        });
+    } catch (error) {
+        console.log(error);
+        res.status({
+            status: "failed",
+            message: "Server Error",
+        });
+    }
 };

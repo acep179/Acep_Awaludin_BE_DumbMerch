@@ -8,7 +8,7 @@ const { addUser, getUsers, getUser, updateUser, deleteUser } = require("../contr
 const { addProduct, getProducts, getProduct, updateProduct, deleteProduct } = require("../controllers/product");
 const { addCategory, getCategories, getCategory, updateCategory, deleteCategory } = require("../controllers/category");
 const { addTransaction, getTransactions } = require("../controllers/transaction");
-const { register, login } = require("../controllers/auth");
+const { register, login, checkAuth } = require("../controllers/auth");
 
 //. Middleware
 const { auth } = require('../middlewares/auth')
@@ -40,5 +40,6 @@ router.get("/transactions", getTransactions)
 
 router.post("/register", register)
 router.post("/login", login)
+router.post("/check-auth", checkAuth)
 
 module.exports = router;
