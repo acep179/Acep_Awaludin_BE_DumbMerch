@@ -40,6 +40,6 @@ router.get("/transactions", getTransactions)
 
 router.post("/register", register)
 router.post("/login", login)
-router.post("/check-auth", checkAuth)
+router.get("/check-auth", auth, checkAuth)
 
 module.exports = router;
