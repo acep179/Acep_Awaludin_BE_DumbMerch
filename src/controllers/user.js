@@ -1,4 +1,6 @@
 const { user, profile } = require("../../models");
+const bcrypt = require("bcrypt");
+
 
 exports.addUser = async (req, res) => {
     try {
@@ -87,7 +89,15 @@ exports.updateUser = async (req, res) => {
 
         const {id} = req.params
 
-        await user.update(req.body,{
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+
+        await user.update({
+            ...req.body,
+            password: hashedPassword
+        },
+        {
             where: {
                 id
             }
@@ -96,7 +106,7 @@ exports.updateUser = async (req, res) => {
         res.send({
             status: "success",
             message: `Update user id: ${id} finished`,
-            data: {user: req.body},
+            data: {user: {...req.body, password: hashedPassword}},
         });
 
     } catch (error) {
