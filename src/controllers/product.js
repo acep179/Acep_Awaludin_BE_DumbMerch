@@ -148,7 +148,7 @@ exports.getProduct = async (req, res) => {
                     model: category,
                     as: "categories",
                     through: {
-                        model: productCategory,
+                        model: category_product,
                         as: "bridge",
                         attributes: [],
                     },
