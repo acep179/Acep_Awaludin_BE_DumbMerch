@@ -31,15 +31,18 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  transaction.init({
-    idProduct: DataTypes.INTEGER,
-    idBuyer: DataTypes.INTEGER,
-    idSeller: DataTypes.INTEGER,
-    price: DataTypes.INTEGER,
-    status: DataTypes.STRING
-  }, {
-    sequelize,
-    modelName: 'transaction',
-  });
+  transaction.init(
+    {
+      idProduct: DataTypes.INTEGER,
+      idBuyer: DataTypes.INTEGER,
+      idSeller: DataTypes.INTEGER,
+      price: DataTypes.INTEGER,
+      status: DataTypes.STRING
+    },
+    {
+      sequelize,
+      modelName: 'transaction',
+    }
+  );
   return transaction;
 };

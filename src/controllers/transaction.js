@@ -2,13 +2,19 @@ const { transaction, product, user } = require("../../models");
 
 exports.addTransaction = async (req, res) => {
     try {
-        await transaction.create(req.body);
+        let data = req.body;
+
+        data = {
+            ...data,
+            idBuyer: req.user.id,
+        };
+
+        await transaction.create(data);
 
         res.send({
             status: "success",
-            data: {transaction: req.body},
+            message: "Add transaction finished",
         });
-        
     } catch (error) {
         console.log(error);
         res.send({
@@ -21,7 +27,7 @@ exports.addTransaction = async (req, res) => {
 exports.getTransactions = async (req, res) => {
     try {
 
-        const data = await transaction.findAll({
+        let data = await transaction.findAll({
             attributes: {
                 exclude: ['createdAt', 'updatedAt', 'idBuyer', 'idSeller', 'idProduct', 'status']
             },
@@ -48,12 +54,23 @@ exports.getTransactions = async (req, res) => {
                     }
                 },
             ]
+        });
 
+        data = JSON.parse(JSON.stringify(data));
+
+        data = data.map((item) => {
+            return {
+                ...item,
+                product: {
+                    ...item.product,
+                    image: process.env.PATH_FILE + item.product.image,
+                },
+            };
         });
 
         res.send({
             status: "success",
-            data: {transaction: data},
+            data: { transaction: data },
         });
     } catch (error) {
         console.log(error);

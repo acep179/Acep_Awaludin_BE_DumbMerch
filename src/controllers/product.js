@@ -114,10 +114,17 @@ exports.getProducts = async (req, res) => {
             },
         });
 
+        data = JSON.parse(JSON.stringify(dataProduct));
+
+        data = data.map((item) => {
+            return { ...item, image: process.env.PATH_FILE + item.image };
+        });
+
         res.send({
             status: "success",
-            data: {products: dataProduct},
+            products: data,
         });
+
     } catch (error) {
         console.log(error);
         res.send({
@@ -162,9 +169,16 @@ exports.getProduct = async (req, res) => {
             }
         });
 
+        data = JSON.parse(JSON.stringify(dataProduct));
+
+        data = {
+            ...data,
+            image: process.env.PATH_FILE + data.image,
+        };
+
         res.send({
             status: "success",
-            data: {product: dataProduct},
+            product: data,
         });
     } catch (error) {
         console.log(error);

@@ -24,10 +24,10 @@ router.patch('/user/:id', updateUser)
 router.delete('/user/:id', deleteUser)
 
 router.post("/product", auth, uploadImage('image'), addProduct)
-router.get("/products", getProducts)
-router.get("/product/:id", getProduct)
-router.patch("/product/:id", updateProduct)
-router.delete("/product/:id", deleteProduct)
+router.get("/products", auth, getProducts)
+router.get("/product/:id", auth, getProduct)
+router.patch("/product/:id", auth, uploadImage('image'), updateProduct)
+router.delete("/product/:id", auth, deleteProduct)
 
 router.post("/category", addCategory)
 router.get("/categories", getCategories)
@@ -36,7 +36,7 @@ router.patch("/category/:id", updateCategory)
 router.delete("/category/:id", deleteCategory)
 
 router.post("/transaction", auth, addTransaction)
-router.get("/transactions", getTransactions)
+router.get("/transactions", auth, getTransactions)
 
 router.post("/register", register)
 router.post("/login", login)
