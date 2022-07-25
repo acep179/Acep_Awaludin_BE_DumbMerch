@@ -1,6 +1,15 @@
 const { user, profile, chat } = require("../../models")
 
 const socketIo = (io) => {
+
+    io.use((socket, next) => {
+        if (socket.handshake.auth && socket.handshake.auth.token ) {
+            next();
+        } else {
+            next(new Error("Not Authorized"));
+        }
+    });
+
     io.on('connection', (socket) => {
         console.log('client connect:', socket.id);
 
