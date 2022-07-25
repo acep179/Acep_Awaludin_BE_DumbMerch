@@ -16,6 +16,7 @@ const io = new Server(server, {
         origin: 'http://localhost:3000' // define client origin if both client and server have different origin
     }
 })
+require('./src/socket')(io)
 
 const port = 5000
 
