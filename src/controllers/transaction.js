@@ -27,7 +27,12 @@ exports.addTransaction = async (req, res) => {
 exports.getTransactions = async (req, res) => {
     try {
 
+        const idBuyer = req.user.id
+
         let data = await transaction.findAll({
+            where: {
+                idBuyer,
+            },
             attributes: {
                 exclude: [ 'updatedAt', 'idBuyer', 'idSeller', 'idProduct', 'status']
             },
