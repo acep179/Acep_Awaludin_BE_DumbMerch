@@ -129,11 +129,10 @@ exports.login = async (req, res) => {
         //. Pembuatan Token
         const token = jwt.sign({ id: userExist.id }, process.env.TOKEN_KEY);
 
-        console.log(token)
-
         res.status(200).send({
             status: "success",
             data: {
+                id: userExist.id,
                 name: userExist.name,
                 email: userExist.email,
                 status: userExist.status,
