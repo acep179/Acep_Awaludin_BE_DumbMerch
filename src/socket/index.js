@@ -4,7 +4,7 @@ const socketIo = (io) => {
 
         socket.on('disconnect', () => {
             console.log('client disconnect');
-          })
+        })
     })
 }
 
