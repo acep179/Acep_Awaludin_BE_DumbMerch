@@ -29,7 +29,7 @@ exports.getTransactions = async (req, res) => {
 
         let data = await transaction.findAll({
             attributes: {
-                exclude: ['createdAt', 'updatedAt', 'idBuyer', 'idSeller', 'idProduct', 'status']
+                exclude: [ 'updatedAt', 'idBuyer', 'idSeller', 'idProduct', 'status']
             },
             include: [
                 {
