@@ -4,7 +4,7 @@ const cloudinary = require('../utils/cloudinary');
 exports.addProduct = async (req, res) => {
     try {
         
-        const { category: categoryName, ...data } = req.body;
+        const { categoryId, ...data } = req.body;
 
         const result = await cloudinary.uploader.upload(req.file.path, {
             folder: 'dumbmerch',
@@ -21,24 +21,24 @@ exports.addProduct = async (req, res) => {
         newProduct = JSON.parse(JSON.stringify(newProduct))
 
         // code here
-        const categoryData = await category.findOne({
-            where: {
-                name: categoryName,
-            },
-        });
+        // const categoryData = await category.findOne({
+        //     where: {
+        //         id: categoryId,
+        //     },
+        // });
 
-        if (categoryData) {
-            await category_product.create({
-                idCategory: categoryData.id,
-                idProduct: newProduct.id
-            });
-        } else {
-            const newCategory = await category.create({ name: categoryName });
-            await category_product.create({
-                idCategory: newCategory.id,
-                idProduct: newProduct.id
-            });
-        }
+        // if (categoryData) {
+        //     await category_product.create({
+        //         idCategory: categoryData.id,
+        //         idProduct: newProduct.id
+        //     });
+        // } else {
+        //     const newCategory = await category.create({ name: categoryName });
+        //     await category_product.create({
+        //         idCategory: newCategory.id,
+        //         idProduct: newProduct.id
+        //     });
+        // }
         
         let productData = await product.findOne({
             where: {
@@ -52,17 +52,17 @@ exports.addProduct = async (req, res) => {
                         exclude: ["createdAt", "updatedAt", "password"],
                     },
                 },
-                {
-                    model: category,
-                    as: "categories",
-                    through: {
-                        model: category_product,
-                        as: "bridge",
-                    },
-                    attributes: {
-                        exclude: ["createdAt", "updatedAt"],
-                    },
-                },
+                // {
+                //     model: category,
+                //     as: "categories",
+                //     through: {
+                //         model: category_product,
+                //         as: "bridge",
+                //     },
+                //     attributes: {
+                //         exclude: ["createdAt", "updatedAt"],
+                //     },
+                // },
             ],
             attributes: {
                 exclude: ["createdAt", "updatedAt", "idUser"],
