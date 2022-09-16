@@ -14,7 +14,7 @@ exports.addProduct = async (req, res) => {
         
         let newProduct = await product.create({
             ...data,
-            image: result.public_id,
+            image: result.secure_url,
             idUser: req.user.id 
         })
         
@@ -116,10 +116,6 @@ exports.getProducts = async (req, res) => {
 
         data = JSON.parse(JSON.stringify(dataProduct));
 
-        data = data.map((item) => {
-            return { ...item, image: process.env.PATH_FILE + item.image };
-        });
-
         res.send({
             status: "success",
             products: data,
@@ -170,11 +166,6 @@ exports.getProduct = async (req, res) => {
         });
 
         data = JSON.parse(JSON.stringify(dataProduct));
-
-        data = {
-            ...data,
-            image: process.env.PATH_FILE + data.image,
-        };
 
         res.send({
             status: "success",
