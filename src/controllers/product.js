@@ -19,11 +19,6 @@ exports.addProduct = async (req, res) => {
         })
         
         newProduct = JSON.parse(JSON.stringify(newProduct))
-        
-        newProduct = {
-            ...newProduct,
-            image: process.env.PATH_FILE + newProduct.image
-        }
 
         // code here
         const categoryData = await category.findOne({
@@ -78,8 +73,6 @@ exports.addProduct = async (req, res) => {
             status: "success",
             data: {productData}
         })
-    
-    
     
     } catch (error) {
         console.log(error);
