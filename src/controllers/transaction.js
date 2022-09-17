@@ -63,16 +63,6 @@ exports.getTransactions = async (req, res) => {
 
         data = JSON.parse(JSON.stringify(data));
 
-        data = data.map((item) => {
-            return {
-                ...item,
-                product: {
-                    ...item.product,
-                    image: process.env.PATH_FILE + item.product.image,
-                },
-            };
-        });
-
         res.send({
             status: "success",
             data: { transaction: data },
